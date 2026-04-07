@@ -16,9 +16,25 @@
   ],
   "icons": [
     {
-      "src": "idknewlogo.png",
+      "src": "real_logo512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "Screenshot 2026-04-07 132805.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Gameplay Action"
+    },
+    {
+      "src": "Screenshot 2026-04-07 132857.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "The Swarm Approaches"
     }
   ],
   "lang": "en",
