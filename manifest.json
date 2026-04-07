@@ -1,18 +1,25 @@
 {
   "background_color": "#c37e7e",
   "dir": "auto",
+  "start_url": "index.html",
   "display": "standalone",
   "name": "Bloody Swarm",
   "orientation": "landscape",
   "scope": "/",
   "short_name": "Blood Swarm",
-  "start_url": "https://turtle4go.github.io/Bloody-Swarm/",
   "theme_color": "#a43131",
-  "description": "WARNING\n\nNot for the Weak, may cause serious rage. Very intense on high waves. Also, no sounds are included in the game. (GAME IN BETA)\n\nKEY BINDS\n\nWASD - Movement\n\nLeft Click - Attack (Has Sword)\n\nSpace - Jump\n\nShift - Sprint (Uses Stamina)\n\nMouse - Look\n\nRight Click - Throw (750 Kills+)\n\nC - Crouch Toggle\n\nV - View Toggle\n\nINSTRUCTIONS (IMPORTANT MECHANICS)\n\nThe main goal of the game is to survive the longest you can, even though you technically beat the game after the boss, it never really ends. You have 100 Health (At the start of the game atleast) and 100 Stamina. The game uses Kills as the main integer, higher kills mean stronger wave and enemies. Higher kills can also buff you sometimes, like getting a better sword or getting a faster sprint speed. They are also different types of enemies, Red is normal, Orange is fast and can dodge attacks, Yellow does a lot of damage, and is pretty fast, Pink does not move but has ranged attacks, Brown is the Boss (Apex Predator), and Peach is extremely fast and can teleport to the player. Some can dodge or tank hits, like Orange, Yellow, or Peach, but with certain Swords, they can be countered. They are also parkour parts in the game, which you are able to parkour on. Some are also needed for claiming a few swords, like the Summit Sword and Excalibur. Currently, they are 5 Swords/Sword Upgrades in the game.  Med kits naturally generate in the map, and when on low HP, you can claim them and heal up a bit. Crouching can also be useful as it has a 10% Dodge mechanic and can go under low surfaces. 3rd Person is highly recommended on stronger waves, as enemies have a higher chance to come from behind. Most important mechanics have been covered.\n\nKILL CHART\n\n(10HP every 10 kills)|25 Kills: 1/sec or 50% chance for 2/sec|50 Kills: +15% Speed and 2/sec|100 Kills: 3/sec &amp; Black Sword|250 Kills: 4/sec|750 Kills: Throw &amp; 6/sec|1000 Kills: +25% Speed &amp; 10/sec|1250 Kills: 1.5x Sword Range &amp; 3x Pink Damage|1500 Kills: 1v1 BOSS FIGHT! &amp; Lower Pink and Red enemy spawns|2000 Kills: Excalibur Spawns + Minigame (Upgraded Damage and Range)|2250 Kills: Peach teleport faster &amp; 2% Drop from enemies for permanent upgrades (Life and Stamina)|",
+  "description": "Not for the Weak. Survive the swarm, upgrade your blades, and defeat the Apex Predator.",
   "id": "turtle",
   "display_override": [
     "fullscreen",
     "window-controls-overlay"
+  ],
+  "icons": [
+    {
+      "src": "idknewlogo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ],
   "lang": "en",
   "iarc_rating_id": "f4497685-7baa-8d6d-87f0-3f14e31facb9",
