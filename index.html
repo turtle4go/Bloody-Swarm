@@ -129,6 +129,7 @@
 </head>
 <body>
 
+<audio id="bgm" src="bloodyswarmaudio.mp3" loop preload="auto"></audio>
 <canvas id="gameCanvas"></canvas>
 <div id="damage-overlay"></div>
 <div id="heal-overlay" style="position:fixed; inset:0; background:rgba(0,255,100,0.3); opacity:0; pointer-events:none; transition:opacity 0.15s; z-index:15;"></div>
@@ -641,6 +642,11 @@ function resetGame() {
   playerExc.visible = false; fpsExcGroup.visible = false; excGroup.visible = false;
   
   updateSwordAppearance(); updateKillUI(); updateUI();
+
+  // Restart music from beginning on death
+  const bgm = document.getElementById('bgm');
+  bgm.currentTime = 0;
+  bgm.play().catch(() => {});
 }
 
 function updateUI() {
@@ -732,7 +738,11 @@ document.addEventListener('pointerlockchange', () => {
       uiLayer.style.display = isLocked ? 'block' : 'none';
       viewLabel.style.display = isLocked ? 'block' : 'none';
       crosshair.style.display = isLocked ? 'block' : 'none';
-      if (isLocked) setView(viewMode);
+      if (isLocked) {
+        setView(viewMode);
+        const bgm = document.getElementById('bgm');
+        if (bgm.paused) bgm.play().catch(() => {});
+      }
   }
 });
 document.addEventListener('mousemove', (e) => { 
@@ -866,7 +876,7 @@ function updateGame() {
   for (let i = enemyProjectiles.length - 1; i >= 0; i--) {
       let p = enemyProjectiles[i]; p.mesh.position.addScaledVector(p.dir, 14 * dt); 
       if (p.mesh.position.distanceTo(new THREE.Vector3(player.x, player.y - 0.5, player.z)) < 1.2) {
-         playerHP = Math.max(0, playerHP - ((kills >= 1250) ? 45 : 15)); updateUI();
+         playerHP = Math.max(0, playerHP - ((kills >= 1250) ? 22.5 : 7.5)); updateUI();
          const dmgFlash = document.getElementById('damage-overlay'); dmgFlash.style.opacity = '0.65'; setTimeout(() => dmgFlash.style.opacity = '0', 150);
          scene.remove(p.mesh); enemyProjectiles.splice(i, 1);
       } 
