@@ -363,19 +363,59 @@ function updateMedkits(dt) {
 
 // --- Player Visuals ---
 const playerGroup = new THREE.Group(); scene.add(playerGroup);
-const playerMat = new THREE.MeshStandardMaterial({ color: 0x5D8FBF });
-const bodyMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 1.2, 10), playerMat);
-bodyMesh.castShadow = true; playerGroup.add(bodyMesh);
-const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 12), new THREE.MeshStandardMaterial({ color: 0xE8C9A0 }));
-headMesh.position.y = 0.78; headMesh.castShadow = true; playerGroup.add(headMesh);
 
-const createLimb = (isLeg, xOffset, yOffset) => {
+// Torso Setup
+const torsoGroup = new THREE.Group();
+const chest = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.45, 0.35), new THREE.MeshStandardMaterial({ color: 0x2980B9 })); // Blue Shirt
+chest.position.y = 0.25; chest.castShadow = true;
+const belt = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.1, 0.36), new THREE.MeshStandardMaterial({ color: 0x333333 })); // Belt
+belt.position.y = 0; belt.castShadow = true;
+const pelvis = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.25, 0.35), new THREE.MeshStandardMaterial({ color: 0x2C3E50 })); // Pants
+pelvis.position.y = -0.15; pelvis.castShadow = true;
+torsoGroup.add(chest, belt, pelvis);
+playerGroup.add(torsoGroup);
+
+// Head Setup
+const headGroup = new THREE.Group();
+headGroup.position.y = 0.75;
+const headBase = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.45, 0.45), new THREE.MeshStandardMaterial({ color: 0xE8C9A0 }));
+headBase.castShadow = true; headGroup.add(headBase);
+
+const eyeMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
+const leftEye = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 0.05), eyeMat);
+leftEye.position.set(-0.1, 0.05, -0.23);
+const rightEye = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 0.05), eyeMat);
+rightEye.position.set(0.1, 0.05, -0.23);
+headGroup.add(leftEye, rightEye);
+
+const hair = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.12, 0.48), new THREE.MeshStandardMaterial({ color: 0x4A2E1B }));
+hair.position.set(0, 0.24, 0); headGroup.add(hair);
+
+const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.04, 0.05), eyeMat);
+mouth.position.set(0, -0.1, -0.23); headGroup.add(mouth);
+playerGroup.add(headGroup);
+
+// Limbs Setup
+const createLimb = (isLeg, xOffset, yOffset, color1) => {
     const pivot = new THREE.Group(); pivot.position.set(xOffset, yOffset, 0);
-    const mesh = new THREE.Mesh(new THREE.CylinderGeometry(isLeg ? 0.14 : 0.12, 0.1, isLeg ? 0.7 : 0.6, 8), new THREE.MeshStandardMaterial({ color: isLeg ? 0x2C3E50 : 0x5D8FBF }));
-    mesh.position.y = isLeg ? -0.35 : -0.3; mesh.castShadow = true; pivot.add(mesh); return pivot;
+    
+    const limbGeom = new THREE.BoxGeometry(isLeg ? 0.25 : 0.2, 0.5, isLeg ? 0.25 : 0.2);
+    const limbMat = new THREE.MeshStandardMaterial({ color: color1 });
+    const limb = new THREE.Mesh(limbGeom, limbMat);
+    limb.position.y = -0.25; limb.castShadow = true; pivot.add(limb);
+
+    if (isLeg) {
+        const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.15, 0.35), new THREE.MeshStandardMaterial({ color: 0x1a1a1a }));
+        shoe.position.set(0, -0.55, -0.05); shoe.castShadow = true; pivot.add(shoe);
+    } else {
+        const hand = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.18, 0.18), new THREE.MeshStandardMaterial({ color: 0xE8C9A0 }));
+        hand.position.set(0, -0.55, 0); hand.castShadow = true; pivot.add(hand);
+    }
+    return pivot;
 }
-const leftArm = createLimb(false, -0.48, 0.5); const rightArm = createLimb(false, 0.48, 0.5);
-const leftLeg = createLimb(true, -0.2, -0.2); const rightLeg = createLimb(true, 0.2, -0.2);
+
+const leftArm = createLimb(false, -0.42, 0.5, 0x2980B9); const rightArm = createLimb(false, 0.42, 0.5, 0x2980B9);
+const leftLeg = createLimb(true, -0.2, -0.2, 0x2C3E50); const rightLeg = createLimb(true, 0.2, -0.2, 0x2C3E50);
 playerGroup.add(leftArm, rightArm, leftLeg, rightLeg);
 
 // --- Weapons Setup ---
@@ -384,7 +424,7 @@ const blade = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.25, 0.22), new THREE.
 const hilt = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.12, 0.18), new THREE.MeshStandardMaterial({ color: 0xAA7C4A, metalness: 0.4 }));
 blade.position.y = 0.85; swordGroup.add(blade, hilt); swordGroup.position.set(-14, 13, -4); scene.add(swordGroup);
 
-const playerSword = swordGroup.clone(); playerSword.scale.set(0.52, 0.52, 0.52); playerSword.position.set(0, -0.45, 0.2); playerSword.rotation.x = Math.PI / 2.2; playerSword.visible = false; rightArm.add(playerSword); 
+const playerSword = swordGroup.clone(); playerSword.scale.set(0.52, 0.52, 0.52); playerSword.position.set(0, -0.65, 0.25); playerSword.rotation.x = Math.PI / 2.2; playerSword.visible = false; rightArm.add(playerSword); 
 const fpsSwordGroup = swordGroup.clone(); fpsSwordGroup.scale.set(0.38, 0.38, 0.38); fpsSwordGroup.position.set(0.52, -0.42, -0.65); fpsSwordGroup.rotation.set(0.25, 0.05, 0.1); fpsSwordGroup.visible = false; camera.add(fpsSwordGroup);
 
 // Excalibur
@@ -393,7 +433,7 @@ const excBlade = new THREE.Mesh(new THREE.BoxGeometry(0.18, 1.6, 0.3), new THREE
 const excHilt = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.15, 0.2), new THREE.MeshStandardMaterial({ color: 0xFFD700, metalness: 0.8 }));
 excBlade.position.y = 0.85; excGroup.add(excBlade, excHilt); excGroup.visible = false; scene.add(excGroup);
 
-const playerExc = excGroup.clone(); playerExc.scale.set(0.52, 0.52, 0.52); playerExc.position.set(0, -0.45, 0.2); playerExc.rotation.x = Math.PI / 2.2; playerExc.visible = false; leftArm.add(playerExc);
+const playerExc = excGroup.clone(); playerExc.scale.set(0.52, 0.52, 0.52); playerExc.position.set(0, -0.65, 0.25); playerExc.rotation.x = Math.PI / 2.2; playerExc.visible = false; leftArm.add(playerExc);
 const fpsExcGroup = excGroup.clone(); fpsExcGroup.scale.set(0.38, 0.38, 0.38); fpsExcGroup.position.set(-0.52, -0.42, -0.65); fpsExcGroup.rotation.set(0.25, -0.05, -0.1); fpsExcGroup.visible = false; camera.add(fpsExcGroup);
 
 function updateSwordAppearance() {
@@ -453,17 +493,14 @@ function spawnEnemy() {
 
   const r = Math.random();
   if (kills >= 2000) {
-      // Peach only shows up here (at 2k)
       if (r < 0.075) { type = 'peach'; color = 0xffdab9; emissive = 0x552211; speed = 9.8; damage = 1.5; health = 6; radius = 0.45; } 
       else if (r < 0.25) { type = 'pink'; color = 0xff66b2; emissive = 0x550033; speed = 0; damage = 15; health = 3; radius = 0.55; }
       else if (r < 0.55) { type = 'yellow'; color = 0xffcc33; emissive = 0x442200; speed = 5.7; damage = 12.5; health = 2; radius = 0.48; }
       else if (r < 0.85) { type = 'orange'; color = 0xff8844; emissive = 0x552200; speed = 8.3; damage = 2.8; health = 1; radius = 0.4; }
   } else if (kills >= 1500) {
-      // 1.5k Tier: 2% Pink and very rare Red
       if (r < 0.02) { type = 'pink'; color = 0xff66b2; emissive = 0x550033; speed = 0; damage = 15; health = 3; radius = 0.55; }
       else if (r < 0.50) { type = 'yellow'; color = 0xffcc33; emissive = 0x442200; speed = 5.7; damage = 12.5; health = 2; radius = 0.48; }
       else if (r < 0.98) { type = 'orange'; color = 0xff8844; emissive = 0x552200; speed = 8.3; damage = 2.8; health = 1; radius = 0.4; }
-      // Red only spawns if r >= 0.98 (2% chance)
   } else if (kills >= 1000) {
       if (r < 0.20) { type = 'pink'; color = 0xff66b2; emissive = 0x550033; speed = 0; damage = 15; health = 3; radius = 0.55; }
       else if (r < 0.40) { type = 'yellow'; color = 0xffcc33; emissive = 0x442200; speed = 5.7; damage = 12.5; health = 2; radius = 0.48; }
@@ -801,8 +838,23 @@ function updateGame() {
   // Animations
   if (len > 0 && player.onGround) player.walkTime += spd * dt * 2.0; else if (player.onGround) player.walkTime = 0;
   const legRot = Math.sin(player.walkTime) * 0.8;
-  if (!player.onGround) { leftArm.rotation.set(Math.PI*0.85, 0, 0.3); rightArm.rotation.set(Math.PI*0.85, 0, -0.3); leftLeg.rotation.x = 0.3; rightLeg.rotation.x = -0.3; } 
-  else { leftLeg.rotation.x = legRot; rightLeg.rotation.x = -legRot; leftArm.rotation.set(-legRot*0.8, 0, 0); rightArm.rotation.set(legRot*0.8, 0, 0); }
+  
+  if (!player.onGround) { 
+      leftArm.rotation.set(Math.PI*0.85, 0, 0.3); 
+      rightArm.rotation.set(Math.PI*0.85, 0, -0.3); 
+      leftLeg.rotation.x = 0.3; 
+      rightLeg.rotation.x = -0.3; 
+      leftLeg.rotation.z = 0.1;
+      rightLeg.rotation.z = -0.1;
+  } 
+  else { 
+      leftLeg.rotation.x = legRot; 
+      rightLeg.rotation.x = -legRot; 
+      leftLeg.rotation.z = 0;
+      rightLeg.rotation.z = 0;
+      leftArm.rotation.set(-legRot*0.8, 0, 0.05); 
+      rightArm.rotation.set(legRot*0.8, 0, -0.05); 
+  }
 
   if (now - lastRegenTime > 2100 && playerHP < maxPlayerHP && playerHP > 0) { playerHP = Math.min(maxPlayerHP, playerHP + 4); updateUI(); lastRegenTime = now; }
   
@@ -954,9 +1006,30 @@ function updateGame() {
   }
   
   const sc = player.eyeH / STAND_EYE_H;
-  playerGroup.position.set(player.x, player.y - player.eyeH + 0.65 * sc, player.z); playerGroup.rotation.y = player.yaw;
-  bodyMesh.scale.y = sc; headMesh.position.y = 0.78 * sc;
-  leftArm.position.y = 0.5 * sc; rightArm.position.y = 0.5 * sc; leftLeg.position.y = -0.2 * sc; rightLeg.position.y = -0.2 * sc;
+  
+  // Dynamic Bobbing & Scaling implementation
+  let bobbing = 0;
+  let torsoTwist = 0;
+  if (player.onGround && len > 0) {
+      bobbing = Math.abs(Math.cos(player.walkTime)) * 0.08;
+      torsoTwist = Math.sin(player.walkTime) * 0.15;
+  }
+
+  playerGroup.position.set(player.x, player.y - player.eyeH + 0.85 * sc, player.z); 
+  playerGroup.rotation.y = player.yaw;
+  
+  torsoGroup.scale.y = sc;
+  torsoGroup.rotation.y = torsoTwist;
+  torsoGroup.position.y = bobbing * sc;
+  
+  headGroup.position.y = (0.75 + bobbing) * sc;
+  headGroup.rotation.y = -torsoTwist * 0.6; // Stabilize head against torso twist
+
+  leftArm.position.y = (0.5 + bobbing) * sc; 
+  rightArm.position.y = (0.5 + bobbing) * sc; 
+  leftLeg.position.y = -0.2 * sc; 
+  rightLeg.position.y = -0.2 * sc;
+
   renderer.render(scene, camera);
 }
 
