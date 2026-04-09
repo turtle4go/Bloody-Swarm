@@ -19,7 +19,7 @@
       transition: opacity 0.3s;
     }
     #overlay h1 { font-size: 42px; font-weight: 800; background: linear-gradient(135deg, #ffd966, #ffaa33); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 12px; letter-spacing: -0.5px; }
-
+    
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.08); opacity: 0.7; }
@@ -76,7 +76,7 @@
     }
     #hp-bar-bg { width: 220px; height: 18px; background: rgba(0,0,0,0.6); border-radius: 40px; border: 1px solid #aaa; overflow: hidden; margin-bottom: 4px; backdrop-filter: blur(2px); }
     #hp-bar-fill { width: 100%; height: 100%; background: #e34d4d; transition: width 0.2s; }
-
+    
     #stamina-bar-bg { width: 180px; height: 10px; background: rgba(0,0,0,0.6); border-radius: 40px; border: 1px solid #aaa; overflow: hidden; margin-bottom: 6px; backdrop-filter: blur(2px); }
     #stamina-bar-fill { width: 100%; height: 100%; background: #4da6e3; transition: width 0.1s; }
 
@@ -270,10 +270,6 @@ for (let i = 0; i < 80; i++) {
   const angle = (i / 80) * Math.PI * 2 + Math.random() * 0.5; 
   const dist  = 20 + Math.random() * 80; 
   const h = 3 + Math.random() * 4.5;
-  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.32, h * 0.45, 6), new THREE.MeshStandardMaterial({ color: 0x8B5E3C }));
-  trunk.position.set(Math.cos(angle)*dist, h*0.22, Math.sin(angle)*dist); trunk.castShadow = true; scene.add(trunk);
-  const leaves = new THREE.Mesh(new THREE.ConeGeometry(1.1 + Math.random()*0.5, h*0.7, 7), new THREE.MeshStandardMaterial({ color: 0x3c8c2a }));
-  leaves.position.set(Math.cos(angle)*dist, h*0.5 + h*0.35, Math.sin(angle)*dist); leaves.castShadow = true; scene.add(leaves);
   const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.4, h * 0.5, 7), new THREE.MeshStandardMaterial({ color: 0x5D4037, roughness: 0.9 }));
   trunk.position.set(Math.cos(angle)*dist, h*0.25, Math.sin(angle)*dist); trunk.castShadow = true; scene.add(trunk);
   const leafMat = new THREE.MeshStandardMaterial({ color: 0x2e6f1c, roughness: 0.8 });
@@ -287,10 +283,6 @@ for (let i = 0; i < 80; i++) {
 for (let i = 0; i < 150; i++) {
   const bx = (Math.random() - 0.5) * 190, bz = (Math.random() - 0.5) * 190;
   if (Math.abs(bx) < 18 && Math.abs(bz) < 18) continue;
-  const r = 0.6 + Math.random() * 0.8;
-  const bush = new THREE.Mesh(new THREE.DodecahedronGeometry(r, 1), new THREE.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.9 }));
-  bush.position.set(bx, r * 0.4, bz); bush.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0);
-  bush.castShadow = true; scene.add(bush);
   const r = 0.7 + Math.random() * 0.6;
   const bushGroup = new THREE.Group();
   bushGroup.position.set(bx, 0, bz);
@@ -420,7 +412,7 @@ playerGroup.add(headGroup);
 // Limbs Setup
 const createLimb = (isLeg, xOffset, yOffset, color1) => {
     const pivot = new THREE.Group(); pivot.position.set(xOffset, yOffset, 0);
-
+    
     const limbGeom = new THREE.BoxGeometry(isLeg ? 0.25 : 0.2, 0.5, isLeg ? 0.25 : 0.2);
     const limbMat = new THREE.MeshStandardMaterial({ color: color1 });
     const limb = new THREE.Mesh(limbGeom, limbMat);
@@ -443,10 +435,6 @@ playerGroup.add(leftArm, rightArm, leftLeg, rightLeg);
 // --- Weapons Setup ---
 const swordGroup = new THREE.Group();
 const blade = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.25, 0.22), new THREE.MeshStandardMaterial({ color: 0xdddddd, metalness: 0.7, roughness: 0.3 }));
-const hilt = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.12, 0.18), new THREE.MeshStandardMaterial({ color: 0xAA7C4A, metalness: 0.4 }));
-blade.position.y = 0.85; swordGroup.add(blade, hilt); swordGroup.position.set(-14, 13, -4); scene.add(swordGroup);
-
-const playerSword = swordGroup.clone(); playerSword.scale.set(0.52, 0.52, 0.52); playerSword.position.set(0, -0.65, 0.25); playerSword.rotation.x = Math.PI / 2.2; playerSword.visible = false; rightArm.add(playerSword); 
 blade.position.y = 0.9;
 const crossguard = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.12, 0.18), new THREE.MeshStandardMaterial({ color: 0xAA7C4A, metalness: 0.4 }));
 crossguard.position.y = 0.25;
@@ -463,10 +451,6 @@ const fpsSwordGroup = swordGroup.clone(); fpsSwordGroup.scale.set(0.38, 0.38, 0.
 // Excalibur
 const excGroup = new THREE.Group();
 const excBlade = new THREE.Mesh(new THREE.BoxGeometry(0.18, 1.6, 0.3), new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x555500, metalness: 1, roughness: 0.1 }));
-const excHilt = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.15, 0.2), new THREE.MeshStandardMaterial({ color: 0xFFD700, metalness: 0.8 }));
-excBlade.position.y = 0.85; excGroup.add(excBlade, excHilt); excGroup.visible = false; scene.add(excGroup);
-
-const playerExc = excGroup.clone(); playerExc.scale.set(0.52, 0.52, 0.52); playerExc.position.set(0, -0.65, 0.25); playerExc.rotation.x = Math.PI / 2.2; playerExc.visible = false; leftArm.add(playerExc);
 excBlade.position.y = 1.0;
 const excGuard = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.15, 0.2), new THREE.MeshStandardMaterial({ color: 0xFFD700, metalness: 0.8 }));
 excGuard.position.y = 0.15;
@@ -570,7 +554,7 @@ function spawnEnemy() {
   const lwp = new THREE.Group(); lwp.position.set(-radius * 0.7, 0.1, 0); const lwm = new THREE.Mesh(wingGeo, wingMat); lwm.position.set(-0.45, 0, 0); lwp.add(lwm);
   const rwp = new THREE.Group(); rwp.position.set(radius * 0.7, 0.1, 0); const rwm = new THREE.Mesh(wingGeo, wingMat); rwm.position.set(0.45, 0, 0); rwp.add(rwm);
   enemyGroup.add(lwp, rwp); scene.add(enemyGroup);
-
+  
   enemies.push({ mesh: enemyGroup, body: bodyMesh, wings: [lwp, rwp], flapTime: Math.random() * Math.PI * 2, type, speed, damage, health, lastFireTime: performance.now(), spawnTime: performance.now(), nextTpTime: performance.now() + 1000 + Math.random()*19000, isFreezing: false });
 }
 
@@ -598,7 +582,7 @@ function handleEnemyDeath(e, i) {
     }
 
     scene.remove(e.mesh); enemies.splice(i, 1);
-
+    
     if (e.isBoss) {
         bossActive = false; document.getElementById('boss-ui').style.display = 'none';
         showAlert("BOSS DEFEATED!", "#ffd700"); kills += 50; playerHP = maxPlayerHP;
@@ -633,7 +617,7 @@ function performAttack() {
   if (!isLocked && !hasExcalibur) return; 
   if (minigameActive) return;
   const now = performance.now(); if (now - lastAttackTime < 420) return; lastAttackTime = now;
-
+  
   if (hasSword && !swordThrown) {
       playerSword.rotation.z = -1.2; setTimeout(() => playerSword.rotation.z = 0, 150);
       fpsSwordGroup.rotation.x -= 0.9; fpsSwordGroup.position.z -= 0.28;
@@ -644,9 +628,9 @@ function performAttack() {
       fpsExcGroup.rotation.x -= 0.9; fpsExcGroup.position.z -= 0.28;
       setTimeout(() => { fpsExcGroup.rotation.x += 0.9; fpsExcGroup.position.z += 0.28; }, 160);
   }
-
+  
   const isBlack = (kills >= 100 && hasSword);
-
+  
   let finalDamage = (hasSword ? 1 : 0.2) * (isBlack ? 2 : 1);
   let attackRange = hasSword ? ((kills >= 1250) ? 5.5 : 3.7) : 2.2;
   let hitboxMultiplier = 1.0;
@@ -664,7 +648,7 @@ function performAttack() {
   }
 
   const playerForward = new THREE.Vector3(0, 0, -1).applyEuler(new THREE.Euler(0, player.yaw, 0));
-
+  
   for (let i = enemies.length - 1; i >= 0; i--) {
       const e = enemies[i];
       const dist = new THREE.Vector3(e.mesh.position.x - player.x, 0, e.mesh.position.z - player.z).length() - (e.isBoss ? 2.0 : 0);
@@ -708,7 +692,7 @@ function resetGame() {
   player.velY = 0; player.yaw = 0; player.pitch = 0; player.crouching = false;
   hasSword = false; swordThrown = false; kills = 0;
   bossActive = false; bossSpawned = false; hasExcalibur = false; excaliburSpawned = false; minigameActive = false;
-
+  
   document.getElementById('boss-ui').style.display = 'none';
   document.getElementById('minigame-ui').style.display = 'none';
 
@@ -716,12 +700,12 @@ function resetGame() {
   playerProjectiles.forEach(p => scene.remove(p.mesh)); playerProjectiles = [];
   enemyProjectiles.forEach(p => scene.remove(p.mesh)); enemyProjectiles = [];
   drops.forEach(d => scene.remove(d.mesh)); drops = [];
-
+  
   if (!scene.children.includes(swordGroup)) scene.add(swordGroup);
   swordGroup.position.set(-14, 13, -4);
   playerSword.visible = false; fpsSwordGroup.visible = false;
   playerExc.visible = false; fpsExcGroup.visible = false; excGroup.visible = false;
-
+  
   updateSwordAppearance(); updateKillUI(); updateUI();
 
   // Restart music from beginning on death
@@ -786,7 +770,7 @@ const keys = {};
 window.addEventListener('keydown', e => {
   if (keys[e.code]) return; keys[e.code] = true;
   if (['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault();
-
+  
   if (minigameActive) {
       const map = {'ArrowUp': '↑', 'ArrowDown': '↓', 'ArrowLeft': '←', 'ArrowRight': '→'};
       if (map[e.code] === minigameSeq[minigameIdx]) {
@@ -839,7 +823,7 @@ const clock = new THREE.Clock();
 
 function updateGame() {
   const dt = Math.min(clock.getDelta(), 0.045);
-
+  
   if (minigameActive) {
       minigameTimer -= dt;
       document.getElementById('minigame-timer').innerText = minigameTimer.toFixed(2) + "s";
@@ -851,38 +835,38 @@ function updateGame() {
   }
 
   if (!isLocked) return;
-
+  
   let now = performance.now();
   updateMedkits(dt);
 
   if ((viewLabelTimer -= dt) <= 0) viewLabel.style.opacity = '0';
-
+  
   const targetH = player.crouching ? CROUCH_EYE_H : STAND_EYE_H;
   player.eyeH += (targetH - player.eyeH) * Math.min(1, (player.crouching ? 14 : 10) * dt);
   crouchInd.style.opacity = player.crouching ? '0.9' : '0';
-
+  
   const sinY = Math.sin(player.yaw), cosY = Math.cos(player.yaw);
   let mx = 0, mz = 0;
   if (keys['KeyW']) { mx -= sinY; mz -= cosY; } if (keys['KeyS']) { mx += sinY; mz += cosY; }
   if (keys['KeyA']) { mx -= cosY; mz += sinY; } if (keys['KeyD']) { mx += cosY; mz -= sinY; }
   const len = Math.sqrt(mx * mx + mz * mz);
-
+  
   let tryingToSprint = !player.crouching && (keys['ShiftLeft'] || keys['ShiftRight']) && (len > 0);
   if (tryingToSprint && playerStamina > 0) { playerStamina = Math.max(0, playerStamina - 10 * dt); lastSprintTime = now; updateUI(); } 
   else { tryingToSprint = false; if (now - lastSprintTime > 3000 && playerStamina < maxPlayerStamina) { playerStamina = Math.min(maxPlayerStamina, playerStamina + 20 * dt); updateUI(); } }
-
+  
   let spdMod = (kills >= 1000) ? 1.25 : (kills >= 50) ? 1.15 : (kills >= 25) ? 1.10 : 1.0;
   const spd = player.crouching ? player.speed * 0.45 : tryingToSprint ? (player.sprintSpeed * spdMod) : player.speed;
   if (len > 0) { mx = mx / len * spd; mz = mz / len * spd; }
-
+  
   player.x += mx * dt; player.z += mz * dt; resolveXZCollisions();
   if (keys['Space'] && player.onGround && !player.crouching) { player.velY = player.jumpForce; player.onGround = false; }
   player.velY += GRAVITY * dt; const prevY = player.y; player.y += player.velY * dt; resolveYCollision(prevY);
-
+  
   // Animations
   if (len > 0 && player.onGround) player.walkTime += spd * dt * 2.0; else if (player.onGround) player.walkTime = 0;
   const legRot = Math.sin(player.walkTime) * 0.8;
-
+  
   if (!player.onGround) { 
       leftArm.rotation.set(Math.PI*0.85, 0, 0.3); 
       rightArm.rotation.set(Math.PI*0.85, 0, -0.3); 
@@ -901,7 +885,7 @@ function updateGame() {
   }
 
   if (now - lastRegenTime > 2100 && playerHP < maxPlayerHP && playerHP > 0) { playerHP = Math.min(maxPlayerHP, playerHP + 4); updateUI(); lastRegenTime = now; }
-
+  
   if (!hasSword && Math.hypot(player.x - swordGroup.position.x, player.y - swordGroup.position.y, player.z - swordGroup.position.z) < 3.5) {
       hasSword = true; scene.remove(swordGroup); playerSword.visible = true; fpsSwordGroup.visible = true; updateKillUI();
   }
@@ -936,7 +920,7 @@ function updateGame() {
 
       if (doSpawn) { for(let k = 0; k < numToSpawn; k++) spawnEnemy(); lastSpawnTime = now; }
   }
-
+  
   // Drops
   for (let i = drops.length - 1; i >= 0; i--) {
       let d = drops[i]; d.mesh.rotation.y += dt;
@@ -967,7 +951,7 @@ function updateGame() {
           }
       }
   }
-
+  
   // Enemy Projectiles
   for (let i = enemyProjectiles.length - 1; i >= 0; i--) {
       let p = enemyProjectiles[i]; p.mesh.position.addScaledVector(p.dir, 14 * dt); 
@@ -1040,7 +1024,7 @@ function updateGame() {
     }
     e.mesh.position.y += ((player.y - 0.15) - e.mesh.position.y) * 4 * dt;
   }
-
+  
   camera.position.set(player.x, player.y, player.z); camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');
   if (viewMode === 0) { playerGroup.visible = false; fpsSwordGroup.visible = hasSword && !swordThrown; fpsExcGroup.visible = hasExcalibur; } 
   else {
@@ -1048,9 +1032,9 @@ function updateGame() {
     if (viewMode === 1) { camera.position.set(player.x + sinY*2.6 + cosY*0.5, player.y + 0.85, player.z + cosY*2.6 - sinY*0.5); camera.lookAt(player.x - sinY*4.2, player.y + 0.2, player.z - cosY*4.2); } 
     else { camera.position.set(player.x + sinY*7.2, player.y + 3.2, player.z + cosY*7.2); camera.lookAt(player.x, player.y + 0.6, player.z); }
   }
-
+  
   const sc = player.eyeH / STAND_EYE_H;
-
+  
   // Dynamic Bobbing & Scaling implementation
   let bobbing = 0;
   let torsoTwist = 0;
@@ -1061,11 +1045,11 @@ function updateGame() {
 
   playerGroup.position.set(player.x, player.y - player.eyeH + 0.85 * sc, player.z); 
   playerGroup.rotation.y = player.yaw;
-
+  
   torsoGroup.scale.y = sc;
   torsoGroup.rotation.y = torsoTwist;
   torsoGroup.position.y = bobbing * sc;
-
+  
   headGroup.position.y = (0.75 + bobbing) * sc;
   headGroup.rotation.y = -torsoTwist * 0.6; // Stabilize head against torso twist
 
