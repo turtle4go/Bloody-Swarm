@@ -6,11 +6,7 @@
   <link rel="manifest" href="manifest.json">
   <title>Bloody Swarm</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
-    body { background: #000; overflow: hidden; font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif; }
-    canvas { display: block; width: 100vw; height: 100vh; }
 
-    /* Overlay & UI */
     #overlay {
       position: fixed; inset: 0; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
@@ -18,19 +14,34 @@
       color: white; cursor: pointer; z-index: 20;
       transition: opacity 0.3s;
     }
-    #overlay h1 { font-size: 42px; font-weight: 800; background: linear-gradient(135deg, #ffd966, #ffaa33); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 12px; letter-spacing: -0.5px; }
-    
+
+    /* Logo Styling */
+    #game-logo {
+      width: 250px;           /* Adjust size as needed */
+      margin-bottom: 20px;    /* Space between logo and title */
+      filter: drop-shadow(0 0 10px rgba(255, 170, 51, 0.5)); 
+      animation: pulse 1.5s infinite; /* Uses the pulse animation below */
+    }
+
+    #overlay h1 { 
+      font-size: 42px; font-weight: 800; 
+      background: linear-gradient(135deg, #ffd966, #ffaa33); 
+      -webkit-background-clip: text; background-clip: text; 
+      color: transparent; margin-bottom: 12px; letter-spacing: -0.5px; 
+    }
+
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.08); opacity: 0.7; }
     }
+
     #click-to-start {
       font-size: 32px; font-weight: 900; color: #fff;
       text-shadow: 0 0 15px #ffaa33, 0 0 5px #ffaa33;
       margin-bottom: 24px; animation: pulse 1.5s infinite;
       letter-spacing: 2px; text-transform: uppercase;
     }
-
+    
     #overlay p  { font-size: 16px; color: #ddd; margin-bottom: 28px; text-align: center;}
     #controls-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 12px 40px;
@@ -128,7 +139,15 @@
   </style>
 </head>
 <body>
-
+  <div id="overlay">
+    <img src="idknewlogo.png" id="game-logo" alt="Bloody Swarm Logo">
+    
+    <h1>⚔️ BLOODY SWARM ⚔️</h1>
+    <div id="click-to-start">CLICK TO START</div>
+    
+    <p>Red = Normal | Orange = Quick | Yellow = Elite | Pink = Sniper | Brown = Boss | Peach = Teleporter</p>
+    
+    </div>
 <audio id="bgm" src="bloodyswarmaudio.mp3" loop preload="auto"></audio>
 <canvas id="gameCanvas"></canvas>
 <div id="damage-overlay"></div>
