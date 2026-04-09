@@ -219,10 +219,40 @@ const fillLight = new THREE.PointLight(0x443366, 0.35);
 fillLight.position.set(0, 12, 0);
 scene.add(fillLight);
 
-// Ground & helpers
-const ground = new THREE.Mesh(new THREE.PlaneGeometry(210, 210), new THREE.MeshStandardMaterial({ color: 0x3f6e3a, roughness: 0.8 }));
-ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
-scene.add(new THREE.GridHelper(210, 40, 0x77aa55, 0x446633));
+// Ground & helpers — procedural texture, no grid
+const gtCanvas = document.createElement('canvas'); gtCanvas.width = 256; gtCanvas.height = 256;
+const gtCtx = gtCanvas.getContext('2d');
+gtCtx.fillStyle = '#3d6b35'; gtCtx.fillRect(0,0,256,256);
+const _gPatchColors = ['#2d5a27','#4a7a40','#5a8a4a','#3f6e3a','#336b2e','#558844','#2a5020','#4e7a38'];
+for(let _gi=0;_gi<2200;_gi++){gtCtx.fillStyle=_gPatchColors[Math.floor(Math.random()*_gPatchColors.length)];gtCtx.fillRect(Math.random()*256,Math.random()*256,2+Math.random()*11,2+Math.random()*11);}
+const groundTex = new THREE.CanvasTexture(gtCanvas);
+groundTex.wrapS = groundTex.wrapT = THREE.RepeatWrapping; groundTex.repeat.set(20,20);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(210,210), new THREE.MeshStandardMaterial({map:groundTex, roughness:0.95}));
+ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
+
+// Instanced grass blades (3 colour variants × 5000 = 15 000 planes, GPU-batched)
+const GRASS_COUNT = 5000;
+const _grassGeo = new THREE.PlaneGeometry(0.22, 0.55);
+const _grassMats = [
+  new THREE.MeshStandardMaterial({color:0x4d8c3a, roughness:1.0, side:THREE.DoubleSide}),
+  new THREE.MeshStandardMaterial({color:0x3d7530, roughness:1.0, side:THREE.DoubleSide}),
+  new THREE.MeshStandardMaterial({color:0x6aaa50, roughness:1.0, side:THREE.DoubleSide})
+];
+const _grassDummy = new THREE.Object3D();
+_grassMats.forEach(mat => {
+  const gm = new THREE.InstancedMesh(_grassGeo, mat, GRASS_COUNT);
+  gm.castShadow = false; gm.receiveShadow = false;
+  for(let i=0;i<GRASS_COUNT;i++){
+    const gx=(Math.random()-0.5)*196, gz=(Math.random()-0.5)*196;
+    _grassDummy.position.set(gx, 0.275, gz);
+    _grassDummy.rotation.set(0, Math.random()*Math.PI*2, (Math.random()-0.5)*0.45);
+    _grassDummy.scale.set(0.8+Math.random()*0.5, 0.5+Math.random()*1.0, 1);
+    _grassDummy.updateMatrix();
+    gm.setMatrixAt(i, _grassDummy.matrix);
+  }
+  gm.instanceMatrix.needsUpdate = true;
+  scene.add(gm);
+});
 
 // Collision boxes
 const collidables = [];
